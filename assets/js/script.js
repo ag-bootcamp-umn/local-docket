@@ -40,29 +40,37 @@ function displayDate() {
   // FORMAT THIS!!!
 }
 
+function fillBlocks() {
+  const scheduleData = JSON.parse(localStorage.getItem('scheduleData') || '[]');
+  $(scheduleData).each(function(i, val){
+    const blockId = val.id;
+    $(`#${blockId}`).children('textarea').val(val.input);
+  });
+}
+
+function setValue(e) {
+  if ($(e.target).hasClass('saveBtn') || $(e.target).parent().hasClass('saveBtn')) {
+    const parentId = $(e.target).parents('.time-block').attr('id');
+    const userInput = $(`#${parentId}`).children('textarea').val();
+    console.log(userInput);
+
+    const scheduleData = JSON.parse(localStorage.getItem('scheduleData') || '[]');
+    const currentInput = {
+      id: parentId,
+      input: userInput
+    };
+
+    scheduleData.push(currentInput);
+    localStorage.setItem('scheduleData', JSON.stringify(scheduleData));
+  }
+}
+
 $( document ).ready(function () {
     
   displayDate();
   createBlocks();
-  $('.planner').on('click', function(e) {
-    if ($(e.target).hasClass('saveBtn')) {
-      const parentId = $(e.target).parent().attr('id');
-      const userInput = $(`#${parentId}`).children('textarea').val();
-      console.log(userInput);
-
-      const scheduleData = JSON.parse(localStorage.getItem('scheduleData') || '[]');
-      const currentInput = {
-        id: parentId,
-        input: userInput
-      };
-
-      scheduleData.push(currentInput);
-      localStorage.setItem('scheduleData', JSON.stringify(scheduleData));
-      // push the value of the input to local storage
-
-      // function setValue()
-    }
-  });
+  $('.planner').on('click', setValue);
+  fillBlocks();
 
     // TODO: Add a listener for click events on the save button. This code should
     // use the id in the containing time-block as a key to save the user input in
