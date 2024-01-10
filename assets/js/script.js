@@ -50,22 +50,20 @@ function fillBlocks() {
   });
 }
 
-function setValues(e) {
-  const tgt = $(e.target);
-  if (tgt.hasClass("saveBtn") || tgt.parent().hasClass("saveBtn")) {
-    const parentId = tgt.parents(".time-block").attr("id");
+function setValues() {
+    const parentId = $(this).parents(".time-block").attr("id");
     const userInput = $(`#${parentId}`).children("textarea").val();
     const scheduleData = JSON.parse(
       localStorage.getItem("scheduleData") || "[]"
     );
     const currentInput = {
       id: parentId,
-      input: userInput,
-    };
+      input: userInput
+    }
 
     scheduleData.push(currentInput);
     localStorage.setItem("scheduleData", JSON.stringify(scheduleData));
-  }
+  
   fillBlocks();
 }
 
@@ -73,5 +71,5 @@ $(document).ready(function () {
   displayDate();
   createBlocks();
   fillBlocks();
-  $(".planner").on("click", setValues);
+  $(".planner").on("click", ".saveBtn", setValues);
 });
